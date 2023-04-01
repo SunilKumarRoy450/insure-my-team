@@ -5,7 +5,6 @@ const UserModel = require("../models/User.model");
 //register
 router.post("/register", async (req, res) => {
   const { userName, userEmail, userPassword, userImage, userRole } = req.body;
-  console.log(userName, userEmail, userPassword, userImage, userRole);
   try {
     const users = new UserModel({
       userName,
@@ -17,6 +16,21 @@ router.post("/register", async (req, res) => {
     console.log(users);
     await users.save();
     return res.status(201).send("User Created SuccessFully");
+  } catch (error) {
+    return res.status(500).send({ msg: error });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const { userEmail, userPassword } = req.body;
+  try {
+    const loginUsers = await UserModel.findOne({ userEmail });
+    if (loginUsers) {
+      if (loginUsers.userPassword === userPassword) {
+        return res.status(200).send({ login: true, loggedInUser: loginUsers });
+      }
+    }
+    return res.status(500).send({ login: false });
   } catch (error) {
     return res.status(500).send({ msg: error });
   }
