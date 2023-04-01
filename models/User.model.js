@@ -11,6 +11,12 @@ const UserSchema = new Schema(
       enum: ["admin", "author", "reader"],
       default: "reader",
     },
+    blogs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Blog",
+      },
+    ],
   },
   { versionKey: false, timestamps: true }
 );
