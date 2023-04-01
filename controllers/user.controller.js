@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const UserModel = require("../models/User.model");
 
@@ -30,7 +31,7 @@ router.post("/login", async (req, res) => {
         return res.status(200).send({ login: true, loggedInUser: loginUsers });
       }
     }
-    return res.status(500).send({ login: false });
+    return res.status(404).send({ login: false });
   } catch (error) {
     return res.status(500).send({ msg: error });
   }
