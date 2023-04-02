@@ -40,4 +40,10 @@ router.post("/login", async (req, res) => {
   }
 });
 
+//get
+router.get("/get", async (req, res) => {
+  const users = await UserModel.find().populate("blogs");
+  return res.status(200).send(users);
+});
+
 module.exports = router;
