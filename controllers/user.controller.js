@@ -5,7 +5,8 @@ const UserModel = require("../models/User.model");
 
 //register
 router.post("/register", async (req, res) => {
-  const { userName, userEmail, userPassword, userImage, userRole } = req.body;
+  const { userName, userEmail, userPassword, userImage, userRole, blogs } =
+    req.body;
   try {
     const users = new UserModel({
       userName,
@@ -13,6 +14,7 @@ router.post("/register", async (req, res) => {
       userPassword,
       userImage,
       userRole,
+      blogs,
     });
     console.log(users);
     await users.save();
