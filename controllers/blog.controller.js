@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const BlogModel = require("../models/Blog.model");
 const CommentModel = require("../models/Comment.model");
-const UserModel = require("../models/User.model");
 
 //createBlog
 router.post("/create/blog", async (req, res) => {
