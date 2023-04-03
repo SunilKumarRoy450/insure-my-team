@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const BlogModel = require("../models/Blog.model");
 const CommentModel = require("../models/Comment.model");
+const UserModel = require("../models/User.model");
+
 //createBlog
 router.post("/create/blog", async (req, res) => {
   const { title, user, body, place, createdAt, image } = req.body;
@@ -25,7 +27,7 @@ router.post("/create/blog", async (req, res) => {
 router.post("/create/comment", async (req, res) => {
   const { user, body, blog } = req.body;
   const commentOnBlog = await CommentModel.create({ user, blog, body });
- 
+
   await BlogModel.findOneAndUpdate(
     { _id: blog },
     {
@@ -37,8 +39,15 @@ router.post("/create/comment", async (req, res) => {
 
 //get blog
 router.get("/get/blog", async (req, res) => {
-  const blogs = await BlogModel.findOne().populate("user").populate("comments");
+  const blogs = await BlogModel.find().populate("user").populate("comments");
   return res.status(200).send(blogs);
+});
+
+//delete Blog
+router.delete("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+  const deletedBlog = await BlogModel.findByIdAndDelete({ _id: id });
+  return res.status(200).send({ msg: "Blog deleted", deletedBlog });
 });
 
 module.exports = router;
