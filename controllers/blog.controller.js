@@ -22,8 +22,8 @@ router.post("/create/blog", async (req, res) => {
   }
 });
 
-//create comment
-router.post("/create/comment", async (req, res) => {
+//create comment(creating comment main routes)(http://localhost:8080/blogs/add/comment)
+router.post("/add/comment", async (req, res) => {
   const { user, body, blog } = req.body;
   const commentOnBlog = await CommentModel.create({ user, blog, body });
 
@@ -36,7 +36,7 @@ router.post("/create/comment", async (req, res) => {
   return res.status(200).send(commentOnBlog);
 });
 
-//get blog
+//get blog(getting blog with all comments as an array)(http://localhost:8080/blogs/get/blog)
 router.get("/get/blog", async (req, res) => {
   const blogs = await BlogModel.find().populate("user").populate("comments");
   return res.status(200).send(blogs);
