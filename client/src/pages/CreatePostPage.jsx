@@ -138,12 +138,12 @@ const CreatePostPage = () => {
         minH={"100vh"}
         align={"center"}
         justify={"center"}
-        bg={useColorModeValue("gray.50", "gray.800")}
+        bg={useColorModeValue("rgb(27, 26, 26)")}
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-            <Text fontSize={"lg"} color={"gray.600"}>
+            <Heading color={"whiteAlpha.900"} fontSize={"4xl"}>Sign in to your account</Heading>
+            <Text fontSize={"lg"} color={"whiteAlpha.600"}>
               if you are new here, Please Sign up! <Link to={'/signup'} style={{color:'blue'}} >Sign up</Link>{" "}
               ✌️
             </Text>

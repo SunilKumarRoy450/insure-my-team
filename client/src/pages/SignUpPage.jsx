@@ -52,14 +52,14 @@ const SignUpPage = () => {
         minH={"100vh"}
         align={"center"}
         justify={"center"}
-        bg={useColorModeValue("gray.50", "gray.800")}
+        bg={useColorModeValue("rgb(27, 26, 26)")}
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading fontSize={"4xl"} textAlign={"center"}>
+            <Heading color={"whiteAlpha.900"} fontSize={"4xl"} textAlign={"center"}>
               Sign up
             </Heading>
-            <Text fontSize={"lg"} color={"gray.600"}>
+            <Text fontSize={"lg"} color={"whiteAlpha.600"}>
               fill the details✌️
             </Text>
           </Stack>
