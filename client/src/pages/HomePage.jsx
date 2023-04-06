@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -73,7 +74,16 @@ const HomePage = () => {
               </CardBody>
 
               <CardFooter>
-                <Button variant="outline">Read More</Button>
+                <Link
+                  style={{
+                    border: "1px solid",
+                    padding: ".5rem",
+                    borderRadius: ".3rem",
+                  }}
+                  to={`/${item._id}`}
+                >
+                  Read More
+                </Link>
               </CardFooter>
             </Stack>
           </Card>
