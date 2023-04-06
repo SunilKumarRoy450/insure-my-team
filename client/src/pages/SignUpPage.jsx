@@ -13,12 +13,12 @@ import {
   Heading,
   Text,
   useColorModeValue,
-
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import {Link} from 'react-router-dom'
+
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [signupFormValue, setSignupFormValue] = useState({
@@ -44,7 +44,6 @@ const SignUpPage = () => {
     };
     await axios.post("http://localhost:8080/users/register", payload);
     setSignupFormValue({ username: "", email: "", password: "", image: "" });
-    // navigate("/home");
   };
 
   return (

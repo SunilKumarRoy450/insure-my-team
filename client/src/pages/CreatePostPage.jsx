@@ -15,16 +15,14 @@ import {
   Flex,
   Box,
   FormControl,
-  Checkbox,
   Stack,
-
   Heading,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {Link} from 'react-router-dom'
-import { useEffect } from "react";
+
 const initialFormValue = {
   title: "",
   content: "",
@@ -80,7 +78,7 @@ const CreatePostPage = () => {
         console.log(data)
         if (data.login) {
           localStorage.setItem("loggedInUser", JSON.stringify(data.loggedInUser));
-          // navigate("/home");
+          
         }
       });
     setLoginFormValue({
@@ -176,14 +174,7 @@ const CreatePostPage = () => {
                 />
               </FormControl>
               <Stack spacing={10}>
-                {/* <Stack
-                  direction={{ base: "column", sm: "row" }}
-                  align={"start"}
-                  justify={"space-between"}
-                >
-                  <Checkbox>Remember me</Checkbox>
-                  <Link color={"blue.400"}>Forgot password?</Link>
-                </Stack> */}
+              
                 <Button
                   onClick={handleLoginSubmit}
                   bg={"blue.400"}

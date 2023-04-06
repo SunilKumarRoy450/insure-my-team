@@ -5,6 +5,7 @@ import PrivateRoute from "./PrivateRoute";
 import PostPage from "../pages/PostPage";
 import CreatePostPage from "../pages/CreatePostPage";
 import SignUpPage from "../pages/SignUpPage";
+
 const AllRoutes = () => {
   return (
     <Routes>

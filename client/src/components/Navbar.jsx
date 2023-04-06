@@ -1,7 +1,8 @@
-import { Avatar, Box, Flex, Tag, TagLabel } from "@chakra-ui/react";
 import React from "react";
+import { Avatar, Box, Flex, Tag, TagLabel } from "@chakra-ui/react";
 import style from "./Navbar.module.css";
 import { Link } from "react-router-dom";
+
 const Navbar = () => {
   const loginUserDetail = JSON.parse(localStorage.getItem("loggedInUser"));
 

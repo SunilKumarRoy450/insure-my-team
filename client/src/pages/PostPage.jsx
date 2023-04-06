@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Card,
@@ -14,30 +14,52 @@ import {
   Flex,
   Heading,
   IconButton,
-  Tag,
-  TagLabel,
   Textarea,
 } from "@chakra-ui/react";
 import { BiChat } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
-
 import axios from "axios";
 
 const PostPage = () => {
   const { id } = useParams();
   const [blogAndComment, setBlogAndComment] = useState([]);
+  const [commentFormValue, setCommentFormValue] = useState({ body: "" });
+  const [boolean, setBoolean] = useState(false);
+
+  //Used for giving user id to post comment
+  const userID = JSON.parse(localStorage.getItem("loggedInUser"));
+
   useEffect(() => {
     getBlogAndComment();
-  }, [id]);
+  }, [id, blogAndComment]);
 
-  
+  //Getting all comments on blog
   const getBlogAndComment = async () => {
     const res = await axios.get(`http://localhost:8080/blogs/get/blog`);
-    const data = res.data;
+    const data = await res.data;
     setBlogAndComment(data);
   };
 
+  //Filtering comments array from blogs
   const filterData = blogAndComment?.filter((item) => item._id === id);
+
+  // Post Comment
+  const handleCommentFormOnChange = (e) => {
+    const { value, name } = e.target;
+    setCommentFormValue({ ...commentFormValue, [name]: value });
+  };
+
+  const handleCommentPostOnClick = async (e) => {
+    e.preventDefault();
+    const payload = {
+      user: userID._id,
+      blog: id,
+      body: commentFormValue.body,
+    };
+
+    await axios.post(`http://localhost:8080/blogs/add/comment`, payload);
+    setBoolean(false);
+  };
 
   return (
     <Box w={"100%"}>
@@ -88,22 +110,32 @@ const PostPage = () => {
               },
             }}
           >
-            <Button flex="1" variant="outline" leftIcon={<BiChat />}>
+            <Button
+              onClick={() => setBoolean(true)}
+              flex="1"
+              variant="outline"
+              leftIcon={<BiChat />}
+            >
               Comment
             </Button>
+            {boolean && (
+              <Box>
+                <Textarea
+                  onChange={handleCommentFormOnChange}
+                  name="body"
+                  value={commentFormValue.body}
+                  placeholder="comment...."
+                />
+
+                <Button variant={"outline"} onClick={handleCommentPostOnClick}>
+                  Comment
+                </Button>
+              </Box>
+            )}
           </CardFooter>
           {item &&
             item.comments?.map((item) => (
               <Box key={item._id}>
-                <Tag
-                  size="sm"
-                  variant="outline"
-                  colorScheme="green"
-                  borderRadius="sm"
-                >
-                  <Avatar src="" size="2xs" name="" ml={-1} mr={2} />
-                  <TagLabel></TagLabel>
-                </Tag>
                 <Box
                   padding={".1rem"}
                   className="commentContainer"
@@ -112,17 +144,7 @@ const PostPage = () => {
                   w={"90%"}
                   // bg={"grey"}
                 >
-                  {/* <Text
-                    as="em"
-                    noOfLines={5}
-                    fontSize="2xs"
-                    className="commentText"
-                    color={"#ffffff"}
-                  >
-                    {" "}
-                    {item.body}
-                  </Text> */}
-                  <Textarea isDisabled placeholder={item.body} />
+                  <Textarea isReadOnly placeholder={item.body} />
                 </Box>
               </Box>
             ))}

@@ -14,6 +14,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+
 const HomePage = () => {
   const [blog, setBlog] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,9 +39,10 @@ const HomePage = () => {
 
   const getBlog = async () => {
     const res = await axios.get(`http://localhost:8080/blogs/get/blog`);
-    const data = res.data;
+    const data = await res.data;
     setBlog(data);
   };
+  
   return (
     <>
       <SimpleGrid
