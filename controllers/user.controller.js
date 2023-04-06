@@ -1,5 +1,4 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const router = express.Router();
 const UserModel = require("../models/User.model");
 
@@ -38,27 +37,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// //create blog array
-// router.post("/create", async (req, res) => {
-//   const { title, user, body, place, createdAt, image, } = req.body;
-//   const blogsArray = await BlogModel.create({
-//     title,
-//     user,
-//     body,
-//     place,
-//     createdAt,
-//     image,
-
-//   });
-
-//   await UserModel.findOneAndUpdate(
-//     { _id: user },
-//     {
-//       $push: { blogs: blogsArray._id },
-//     }
-//   );
-//   return res.status(200).send(blogsArray);
-// });
 
 //get
 router.get("/get", async (req, res) => {
