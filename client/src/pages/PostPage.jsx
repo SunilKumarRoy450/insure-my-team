@@ -16,6 +16,7 @@ import {
   IconButton,
   Tag,
   TagLabel,
+  Textarea,
 } from "@chakra-ui/react";
 import { BiChat } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -24,19 +25,12 @@ import axios from "axios";
 
 const PostPage = () => {
   const { id } = useParams();
-  const [blog, setBlog] = useState({});
   const [blogAndComment, setBlogAndComment] = useState([]);
   useEffect(() => {
-    // getBlog();
     getBlogAndComment();
   }, [id]);
 
-  // const getBlog = async () => {
-  //   const res = await axios.get(`http://localhost:8080/blogs/get/blog/${id}`);
-  //   const data = res.data;
-  //   setBlog(data);
-  // };
-
+  
   const getBlogAndComment = async () => {
     const res = await axios.get(`http://localhost:8080/blogs/get/blog`);
     const data = res.data;
@@ -44,9 +38,7 @@ const PostPage = () => {
   };
 
   const filterData = blogAndComment?.filter((item) => item._id === id);
-  console.log(filterData, "filterData");
 
-  console.log(blog);
   return (
     <Box w={"100%"}>
       {filterData?.map((item) => (
@@ -109,13 +101,7 @@ const PostPage = () => {
                   colorScheme="green"
                   borderRadius="sm"
                 >
-                  <Avatar
-                    src=""
-                    size="2xs"
-                    name=""
-                    ml={-1}
-                    mr={2}
-                  />
+                  <Avatar src="" size="2xs" name="" ml={-1} mr={2} />
                   <TagLabel></TagLabel>
                 </Tag>
                 <Box
@@ -124,9 +110,9 @@ const PostPage = () => {
                   margin={"auto"}
                   textAlign={"center"}
                   w={"90%"}
-                  bg={"grey"}
+                  // bg={"grey"}
                 >
-                  <Text
+                  {/* <Text
                     as="em"
                     noOfLines={5}
                     fontSize="2xs"
@@ -135,7 +121,8 @@ const PostPage = () => {
                   >
                     {" "}
                     {item.body}
-                  </Text>
+                  </Text> */}
+                  <Textarea isDisabled placeholder={item.body} />
                 </Box>
               </Box>
             ))}
