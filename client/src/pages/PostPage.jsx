@@ -15,30 +15,42 @@ import {
   Heading,
   IconButton,
   Textarea,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
 } from "@chakra-ui/react";
-import { BiChat } from "react-icons/bi";
+import { BiChat, BiEdit } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from "axios";
+import { getBlog } from "./helper";
 
 const PostPage = () => {
   const { id } = useParams();
   const [blogAndComment, setBlogAndComment] = useState([]);
   const [commentFormValue, setCommentFormValue] = useState({ body: "" });
+  const [updateBlogFormValue, setUpdateBlogFormValue] = useState({
+    title: "",
+    body: "",
+    image: "",
+  });
   const [boolean, setBoolean] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   //Used for giving user id to post comment
   const userID = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
-    getBlogAndComment();
-  }, [id, blogAndComment]);
+    getBlog().then((res) => setBlogAndComment(res));
+  }, []);
 
-  //Getting all comments on blog
-  const getBlogAndComment = async () => {
-    const res = await axios.get(`http://localhost:8080/blogs/get/blog`);
-    const data = await res.data;
-    setBlogAndComment(data);
-  };
 
   //Filtering comments array from blogs
   const filterData = blogAndComment?.filter((item) => item._id === id);
@@ -58,7 +70,31 @@ const PostPage = () => {
     };
 
     await axios.post(`http://localhost:8080/blogs/add/comment`, payload);
+    setCommentFormValue({ body: "" });
     setBoolean(false);
+    // window.location.reload()
+  };
+
+  //Update Blog
+  const handleOnChangeUpdateBlog = (e) => {
+    const { value, name } = e.target;
+    setUpdateBlogFormValue({ ...updateBlogFormValue, [name]: value });
+  };
+
+  const handleOnClickUpdateBlog = async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: updateBlogFormValue.title,
+      body: updateBlogFormValue.body,
+      image: updateBlogFormValue.image,
+    };
+    await axios.put(`http://localhost:8080/blogs/edit/${id}`, payload);
+    setUpdateBlogFormValue({
+      title: "",
+      body: "",
+      image: "",
+    });
+    // window.location.reload()
   };
 
   return (
@@ -118,6 +154,14 @@ const PostPage = () => {
             >
               Comment
             </Button>
+            <Button
+              onClick={onOpen}
+              flex="1"
+              variant="outline"
+              leftIcon={<BiEdit />}
+            >
+              Edit
+            </Button>
             {boolean && (
               <Box>
                 <Textarea
@@ -142,7 +186,6 @@ const PostPage = () => {
                   margin={"auto"}
                   textAlign={"center"}
                   w={"90%"}
-                  // bg={"grey"}
                 >
                   <Textarea isReadOnly placeholder={item.body} />
                 </Box>
@@ -150,6 +193,53 @@ const PostPage = () => {
             ))}
         </Card>
       ))}
+      <Box>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Update Blog</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl isRequired>
+                <FormLabel>Title</FormLabel>
+                <Input
+                  onChange={handleOnChangeUpdateBlog}
+                  value={updateBlogFormValue.title}
+                  name="title"
+                  isRequired
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Content</FormLabel>
+                <Input
+                  onChange={handleOnChangeUpdateBlog}
+                  value={updateBlogFormValue.body}
+                  name="body"
+                  isRequired
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Image</FormLabel>
+                <Input
+                  onChange={handleOnChangeUpdateBlog}
+                  value={updateBlogFormValue.image}
+                  name="image"
+                  isRequired
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Close
+              </Button> */}
+              <Button onClick={handleOnClickUpdateBlog} variant="outline">
+                Update
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Box>
   );
 };

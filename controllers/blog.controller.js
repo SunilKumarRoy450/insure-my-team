@@ -56,4 +56,20 @@ router.get("/get/blog/:id", async (req, res) => {
   return res.status(200).send(blog);
 });
 
+//edit
+router.put("/edit/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, body, image } = req.body;
+  const updatedBlog = await BlogModel.findByIdAndUpdate(
+    id,
+    {
+      title,
+      body,
+      image,
+    },
+    { new: true }
+  );
+  return res.status(200).send({ msg: "Blog Update SuccessFull", updatedBlog });
+});
+
 module.exports = router;

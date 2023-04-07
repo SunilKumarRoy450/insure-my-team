@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -13,7 +12,7 @@ import {
   Button,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { getBlog } from "./helper";
 
 const HomePage = () => {
   const [blog, setBlog] = useState([]);
@@ -34,15 +33,9 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    getBlog();
+    getBlog().then((res) => setBlog(res));
   }, []);
 
-  const getBlog = async () => {
-    const res = await axios.get(`http://localhost:8080/blogs/get/blog`);
-    const data = await res.data;
-    setBlog(data);
-  };
-  
   return (
     <>
       <SimpleGrid
