@@ -6,7 +6,10 @@
   background-color: rgb(27, 26, 26);
 }
 
-
+.blog-container{
+  width: 100%;
+  margin-top: 1rem;
+}
 
 
 

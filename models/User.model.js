@@ -9,7 +9,7 @@ const UserSchema = new Schema(
     userRole: {
       type: String,
       enum: ["admin", "author", "reader"],
-      default: "reader",
+      default: "author",
     },
     // blogs: [
     //   {

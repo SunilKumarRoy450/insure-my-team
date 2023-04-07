@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 import {
   Modal,
@@ -19,9 +18,11 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import {Link} from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getUser } from "./helper";
 
 const initialFormValue = {
   title: "",
@@ -31,12 +32,21 @@ const initialFormValue = {
 };
 
 const CreatePostPage = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [formValue, setFormValue] = useState(initialFormValue);
   const [loginFormValue, setLoginFormValue] = useState({
     email: "",
     password: "",
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    getUser()
+      .then((res) => setUsers(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   //CreatePost
   const handleOnInputChange = (e) => {
@@ -46,16 +56,50 @@ const CreatePostPage = () => {
 
   const handleOnClickSubmitPostForm = async (e) => {
     e.preventDefault();
-    const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"))
+    const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
     console.log(loginUserId);
     const payload = {
       title: formValue.title,
-      user:loginUserId._id,
+      user: loginUserId._id,
       image: formValue.image,
       place: formValue.place,
       body: formValue.content,
     };
-    await axios.post("http://localhost:8080/blogs/create/blog", payload);
+    if (
+      formValue.title === "" ||
+      formValue.image === "" ||
+      formValue.place === "" ||
+      formValue.content === ""
+    ) {
+      toast({
+        title: "Missing Details",
+        description: "Please fill all the details",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } else {
+      if (loginUserId.userRole === "author") {
+        await axios.post("http://localhost:8080/blogs/create/blog", payload);
+        toast({
+          title: "Blog created Successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        toast({
+          title: "Sorry! you are not able to create Blog",
+          description: "Please Signup first",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    }
     onClose();
   };
 
@@ -65,31 +109,67 @@ const CreatePostPage = () => {
     setLoginFormValue({ ...loginFormValue, [name]: value });
   };
 
+  //all users for checking login user is there or not
+  const userEmail = users.map((item) => item.userEmail);
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const payload = {
       userEmail: loginFormValue.email,
       userPassword: loginFormValue.password,
     };
-    await axios
-      .post("http://localhost:8080/users/login", payload)
-      .then((res) => {
-        const data = res.data;
-        console.log(data)
-        if (data.login) {
-          localStorage.setItem("loggedInUser", JSON.stringify(data.loggedInUser));
-          
-        }
+    if (loginFormValue.email === "" || loginFormValue.password === "") {
+      toast({
+        title: "Missing Details",
+        description: "Please fill all the details",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
       });
-    setLoginFormValue({
-      email: "",
-      password: "",
-    });
+    } else {
+      if (userEmail === payload.userEmail) {
+        await axios
+          .post("http://localhost:8080/users/login", payload)
+          .then((res) => {
+            const data = res.data;
+            console.log(data);
+            if (data.login) {
+              localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(data.loggedInUser)
+              );
+            }
+          });
+
+        toast({
+          title: "Login Successfull",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        await toast({
+          title: "First Sign Up",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        navigate("/signup");
+      }
+
+      setLoginFormValue({
+        email: "",
+        password: "",
+      });
+    }
   };
 
   return (
     <div>
-      <Button onClick={onOpen}>+ Create Blog</Button>
+      <Button colorScheme="teal" variant={'outline'} onClick={onOpen}>+ Create Blog</Button>
       <Modal
         isCentered
         onClose={onClose}
@@ -142,9 +222,14 @@ const CreatePostPage = () => {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading color={"whiteAlpha.900"} fontSize={"4xl"}>Sign in to your account</Heading>
+            <Heading color={"whiteAlpha.900"} fontSize={"4xl"}>
+              Sign in to your account
+            </Heading>
             <Text fontSize={"lg"} color={"whiteAlpha.600"}>
-              if you are new here, Please Sign up! <Link to={'/signup'} style={{color:'blue'}} >Sign up</Link>{" "}
+              if you are new here, Please Sign up!{" "}
+              <Link to={"/signup"} style={{ color: "blue" }}>
+                Sign up
+              </Link>{" "}
               ✌️
             </Text>
           </Stack>
@@ -155,7 +240,7 @@ const CreatePostPage = () => {
             p={8}
           >
             <Stack spacing={4}>
-              <FormControl >
+              <FormControl>
                 <FormLabel>Email address</FormLabel>
                 <Input
                   type="email"
@@ -164,7 +249,7 @@ const CreatePostPage = () => {
                   name="email"
                 />
               </FormControl>
-              <FormControl >
+              <FormControl>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -174,7 +259,6 @@ const CreatePostPage = () => {
                 />
               </FormControl>
               <Stack spacing={10}>
-              
                 <Button
                   onClick={handleLoginSubmit}
                   bg={"blue.400"}

@@ -26,6 +26,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
+  Badge,
 } from "@chakra-ui/react";
 import { BiChat, BiEdit } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -34,23 +36,25 @@ import { getBlog } from "./helper";
 
 const PostPage = () => {
   const { id } = useParams();
+  const toast = useToast();
+  const [boolean, setBoolean] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [stopRender, setStopRender] = useState(false);
   const [blogAndComment, setBlogAndComment] = useState([]);
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
   const [commentFormValue, setCommentFormValue] = useState({ body: "" });
   const [updateBlogFormValue, setUpdateBlogFormValue] = useState({
     title: "",
     body: "",
     image: "",
   });
-  const [boolean, setBoolean] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   //Used for giving user id to post comment
   const userID = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
     getBlog().then((res) => setBlogAndComment(res));
-  }, []);
-
+  }, [stopRender]);
 
   //Filtering comments array from blogs
   const filterData = blogAndComment?.filter((item) => item._id === id);
@@ -70,9 +74,17 @@ const PostPage = () => {
     };
 
     await axios.post(`http://localhost:8080/blogs/add/comment`, payload);
+    toast({
+      title: "Comment Added",
+      description: "Thanks for your feedback",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
     setCommentFormValue({ body: "" });
     setBoolean(false);
-    // window.location.reload()
+    setStopRender(true);
   };
 
   //Update Blog
@@ -83,18 +95,39 @@ const PostPage = () => {
 
   const handleOnClickUpdateBlog = async (e) => {
     e.preventDefault();
+    setDisableUpdateBtn(false);
     const payload = {
       title: updateBlogFormValue.title,
       body: updateBlogFormValue.body,
       image: updateBlogFormValue.image,
     };
-    await axios.put(`http://localhost:8080/blogs/edit/${id}`, payload);
-    setUpdateBlogFormValue({
-      title: "",
-      body: "",
-      image: "",
-    });
-    // window.location.reload()
+    if (
+      updateBlogFormValue.title === "" ||
+      updateBlogFormValue.body === "" ||
+      updateBlogFormValue.image === ""
+    ) {
+      setDisableUpdateBtn(false);
+      toast({
+        title: "Missing Details",
+        description: "Please fill all the details",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } else {
+      setDisableUpdateBtn(true);
+
+      await axios.put(`http://localhost:8080/blogs/edit/${id}`, payload);
+      setUpdateBlogFormValue({
+        title: "",
+        body: "",
+        image: "",
+      });
+      setStopRender(true);
+    }
+    onClose();
+    setDisableUpdateBtn(false);
   };
 
   return (
@@ -127,14 +160,14 @@ const PostPage = () => {
             </Flex>
           </CardHeader>
           <CardBody>
-            <Heading>{item.title}</Heading>
+            <Badge>{item.title}</Badge>
             <Text align={"left"}>{item.body}</Text>
           </CardBody>
           <Image
             objectFit="cover"
             maxW={{ base: "100%", sm: "100%" }}
             src={item.image}
-            alt="Chakra UI"
+            alt={item.title}
           />
 
           <CardFooter
@@ -233,7 +266,11 @@ const PostPage = () => {
               {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
                 Close
               </Button> */}
-              <Button onClick={handleOnClickUpdateBlog} variant="outline">
+              <Button
+                isDisabled={disableUpdateBtn}
+                onClick={handleOnClickUpdateBlog}
+                variant="outline"
+              >
                 Update
               </Button>
             </ModalFooter>

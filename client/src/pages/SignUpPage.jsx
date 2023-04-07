@@ -13,13 +13,15 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [signupFormValue, setSignupFormValue] = useState({
     username: "",
@@ -42,8 +44,32 @@ const SignUpPage = () => {
       userPassword: signupFormValue.password,
       userImage: signupFormValue.image,
     };
-    await axios.post("http://localhost:8080/users/register", payload);
-    setSignupFormValue({ username: "", email: "", password: "", image: "" });
+    if (
+      signupFormValue.username === "" ||
+      signupFormValue.email === "" ||
+      signupFormValue.password === "" ||
+      signupFormValue.image === ""
+    ) {
+      toast({
+        title: "Missing Details",
+        description: "Please fill all the details",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } else {
+      await axios.post("http://localhost:8080/users/register", payload);
+
+      setSignupFormValue({ username: "", email: "", password: "", image: "" });
+      toast({
+        title: "Signup Successfull",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   return (
@@ -56,7 +82,11 @@ const SignUpPage = () => {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading color={"whiteAlpha.900"} fontSize={"4xl"} textAlign={"center"}>
+            <Heading
+              color={"whiteAlpha.900"}
+              fontSize={"4xl"}
+              textAlign={"center"}
+            >
               Sign up
             </Heading>
             <Text fontSize={"lg"} color={"whiteAlpha.600"}>
@@ -140,7 +170,10 @@ const SignUpPage = () => {
               </Stack>
               <Stack pt={6}>
                 <Text align={"center"}>
-                  Already a user? <Link to={'/create/blog'} style={{color:'blue'}} >Login</Link>
+                  Already a user?{" "}
+                  <Link to={"/create/blog"} style={{ color: "blue" }}>
+                    Login
+                  </Link>
                 </Text>
               </Stack>
             </Stack>

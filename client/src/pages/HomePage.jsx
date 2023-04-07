@@ -11,13 +11,18 @@ import {
   Text,
   Button,
   SimpleGrid,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { AiFillDelete } from "react-icons/ai";
 import { getBlog } from "./helper";
 
 const HomePage = () => {
+  const toast = useToast();
+  const [blogPerPage] = useState(6);
   const [blog, setBlog] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogPerPage] = useState(6);
+  const [deleteRender, setDeleteRender] = useState(false);
 
   //Get Current Blogs
   const indexOfLastBlog = currentPage * blogPerPage;
@@ -34,10 +39,35 @@ const HomePage = () => {
 
   useEffect(() => {
     getBlog().then((res) => setBlog(res));
-  }, []);
+  }, [deleteRender]);
+
+  //Delete Blog
+  const handleOnClickDeleteBlog = async (id, role) => {
+    console.log(role);
+    if (role === "reader") {
+      toast({
+        title: "Sorry ! You are not allowed to Delete Blog",
+        description: `You must Signup First`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } else {
+      await axios.delete(`http://localhost:8080/blogs/delete/${id}`);
+      toast({
+        title: "Blog Deleted successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      setDeleteRender(true);
+    }
+  };
 
   return (
-    <>
+    <Box w={'100%'}>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3 }}
         direction={["column", "row"]}
@@ -56,7 +86,7 @@ const HomePage = () => {
               objectFit="cover"
               maxW={{ base: "100%", sm: "200px" }}
               src={item.image}
-              alt="Caffe Latte"
+              alt={item.title}
             />
 
             <Stack>
@@ -79,6 +109,14 @@ const HomePage = () => {
                 >
                   Read More
                 </Link>
+                <Button
+                  onClick={() =>
+                    handleOnClickDeleteBlog(item._id, item.user.userRole)
+                  }
+                  flex="1"
+                  variant="outline"
+                  leftIcon={<AiFillDelete />}
+                />
               </CardFooter>
             </Stack>
           </Card>
@@ -97,7 +135,7 @@ const HomePage = () => {
           </Button>
         ))}
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <Box marginTop={'.8rem'} w={'100%'}>
+      <Box className="blog-container">
         <AllRoutes />
       </Box>
     </div>

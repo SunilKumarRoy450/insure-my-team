@@ -1,31 +1,37 @@
 import React from "react";
-import { Avatar, Box, Flex, Tag, TagLabel } from "@chakra-ui/react";
 import style from "./Navbar.module.css";
-import { Link } from "react-router-dom";
+import { TbHomePlus } from "react-icons/tb";
+import { FaSignInAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { Avatar, Box, Flex, IconButton, Tag, TagLabel } from "@chakra-ui/react";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const loginUserDetail = JSON.parse(localStorage.getItem("loggedInUser"));
 
   return (
     <Box className={style.container}>
       <Flex>
-        <Box margin={"2rem"} w={"50%"}>
-          <Link to={"/"}>
-            <Tag colorScheme="blue" size={"lg"}>
-              Home
-            </Tag>
-          </Link>
-        </Box>
+        <Box margin={"2rem"} w={"50%"}></Box>
         <Box
           style={{ display: "flex", justifyContent: "space-evenly" }}
           margin={"2rem"}
           w={"50%"}
         >
-          <Link to={"/signup"}>
-            <Tag colorScheme="blue" size={"lg"}>
-              Sign in
-            </Tag>
-          </Link>
+          <IconButton
+            onClick={() => navigate("/")}
+            variant="outline"
+            aria-label="See menu"
+            icon={<TbHomePlus color="white" />}
+          />
+
+          <IconButton
+            onClick={() => navigate("/signup")}
+            variant="outline"
+            aria-label="See menu"
+            icon={<FaSignInAlt color="white" />}
+          />
+
           <Tag size="md" variant="outline" colorScheme="blue" borderRadius="lg">
             <Avatar
               src={loginUserDetail.userImage}
