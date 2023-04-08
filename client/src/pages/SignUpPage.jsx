@@ -18,10 +18,11 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const toast = useToast();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [signupFormValue, setSignupFormValue] = useState({
     username: "",
@@ -69,6 +70,7 @@ const SignUpPage = () => {
         isClosable: true,
         position: "top",
       });
+      await navigate("/create/blog");
     }
   };
 
