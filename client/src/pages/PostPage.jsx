@@ -73,7 +73,7 @@ const PostPage = () => {
       body: commentFormValue.body,
     };
 
-    await axios.post(`http://localhost:8080/blogs/add/comment`, payload);
+    await axios.post(`https://brave-housecoat-fox.cyclic.app/blogs/add/comment`, payload);
     toast({
       title: "Comment Added",
       description: "Thanks for your feedback",
@@ -118,7 +118,7 @@ const PostPage = () => {
     } else {
       setDisableUpdateBtn(true);
 
-      await axios.put(`http://localhost:8080/blogs/edit/${id}`, payload);
+      await axios.put(`https://brave-housecoat-fox.cyclic.app/blogs/edit/${id}`, payload);
       setUpdateBlogFormValue({
         title: "",
         body: "",

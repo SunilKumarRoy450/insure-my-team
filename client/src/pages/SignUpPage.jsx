@@ -60,7 +60,7 @@ const SignUpPage = () => {
         position: "top",
       });
     } else {
-      await axios.post("http://localhost:8080/users/register", payload);
+      await axios.post("https://brave-housecoat-fox.cyclic.app/users/register", payload);
 
       setSignupFormValue({ username: "", email: "", password: "", image: "" });
       toast({

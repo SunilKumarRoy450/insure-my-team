@@ -56,8 +56,9 @@ const CreatePostPage = () => {
 
   const handleOnClickSubmitPostForm = async (e) => {
     e.preventDefault();
+
     const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
-    console.log(loginUserId);
+
     const payload = {
       title: formValue.title,
       user: loginUserId._id,
@@ -81,7 +82,10 @@ const CreatePostPage = () => {
       });
     } else {
       if (loginUserId.userRole === "author") {
-        await axios.post("http://localhost:8080/blogs/create/blog", payload);
+        await axios.post(
+          "https://brave-housecoat-fox.cyclic.app/blogs/create/blog",
+          payload
+        );
         toast({
           title: "Blog created Successfully",
           status: "success",
@@ -111,7 +115,6 @@ const CreatePostPage = () => {
   };
 
   //all users for checking login user is there or not
-  const userEmail = users.map((item) => item.userEmail);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -129,12 +132,20 @@ const CreatePostPage = () => {
         position: "top",
       });
     } else {
-      if (userEmail === payload.userEmail) {
+      const userData = users.find((item) => {
+        if (
+          item.userEmail === payload.userEmail &&
+          item.userPassword === payload.userPassword
+        ) {
+          return item;
+        }
+      });
+      console.log(userData);
+      if (userData) {
         await axios
-          .post("http://localhost:8080/users/login", payload)
+          .post("https://brave-housecoat-fox.cyclic.app/users/login", payload)
           .then((res) => {
             const data = res.data;
-            console.log(data);
             if (data.login) {
               localStorage.setItem(
                 "loggedInUser",
@@ -145,20 +156,22 @@ const CreatePostPage = () => {
 
         toast({
           title: "Login Successfull",
+          description: "User Found",
           status: "success",
           duration: 3000,
           isClosable: true,
           position: "top",
         });
+        navigate("/");
       } else {
         await toast({
-          title: "First Sign Up",
+          title: "User not found",
+          description: "Please fill correct Email or Password",
           status: "error",
           duration: 3000,
           isClosable: true,
           position: "top",
         });
-        navigate("/signup");
       }
 
       setLoginFormValue({

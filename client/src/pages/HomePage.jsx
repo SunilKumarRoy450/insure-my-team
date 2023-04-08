@@ -44,37 +44,43 @@ const HomePage = () => {
   //Delete Blog
   const handleOnClickDeleteBlog = async (id, role, userId) => {
     const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (role === "reader") {
+    console.log(userId, "userID");
+    console.log(loginUserId._id, "loginId");
+    console.log(role, "role");
+
+    // if (role === "reader") {
+    //   toast({
+    //     title: "Sorry ! You are not allowed to Delete Blog",
+    //     description: `You have to delete your own blog`,
+    //     status: "error",
+    //     duration: 3000,
+    //     isClosable: true,
+    //     position: "top",
+    //   });
+    // } else {
+    if (loginUserId._id === userId || role === "admin") {
+      await axios.delete(
+        `https://brave-housecoat-fox.cyclic.app/blogs/delete/${id}`
+      );
+      toast({
+        title: "Blog Deleted successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      setDeleteRender(true);
+    } else {
       toast({
         title: "Sorry ! You are not allowed to Delete Blog",
-        description: `You have to delete your own blog`,
+        description: `Create your own blog`,
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-    } else {
-      if (loginUserId._id === userId) {
-        await axios.delete(`http://localhost:8080/blogs/delete/${id}`);
-        toast({
-          title: "Blog Deleted successfully",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-        setDeleteRender(true);
-      } else {
-        toast({
-          title: "Sorry ! You can delete your own Blog",
-          description: `Create your own blog`,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-      }
     }
+    // }
   };
 
   return (
