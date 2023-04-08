@@ -42,23 +42,11 @@ const HomePage = () => {
   }, [deleteRender]);
 
   //Delete Blog
-  const handleOnClickDeleteBlog = async (id, role, userId) => {
+  const handleOnClickDeleteBlog = async (id, userId) => {
     const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
-    console.log(userId, "userID");
-    console.log(loginUserId._id, "loginId");
-    console.log(role, "role");
-
-    // if (role === "reader") {
-    //   toast({
-    //     title: "Sorry ! You are not allowed to Delete Blog",
-    //     description: `You have to delete your own blog`,
-    //     status: "error",
-    //     duration: 3000,
-    //     isClosable: true,
-    //     position: "top",
-    //   });
-    // } else {
-    if (loginUserId._id === userId || role === "admin") {
+console.log(loginUserId._id,loginUserId,"loginUser")
+console.log(userId,"userId")
+    if (loginUserId._id === userId || loginUserId.userRole === "admin") {
       await axios.delete(
         `https://brave-housecoat-fox.cyclic.app/blogs/delete/${id}`
       );
@@ -80,7 +68,6 @@ const HomePage = () => {
         position: "top",
       });
     }
-    // }
   };
 
   return (
@@ -130,7 +117,7 @@ const HomePage = () => {
                   onClick={() =>
                     handleOnClickDeleteBlog(
                       item._id,
-                      item.user.userRole,
+
                       item.user._id
                     )
                   }

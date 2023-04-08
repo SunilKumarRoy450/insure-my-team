@@ -26,7 +26,7 @@ const Navbar = () => {
           />
 
           <IconButton
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/create/blog")}
             variant="outline"
             aria-label="See menu"
             icon={<FaSignInAlt color="white" />}
