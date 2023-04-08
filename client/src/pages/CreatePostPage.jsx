@@ -48,7 +48,7 @@ const CreatePostPage = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  //CreatePost
+  //Create Blog
   const handleOnInputChange = (e) => {
     const { value, name } = e.target;
     setFormValue({ ...formValue, [name]: value });
@@ -89,6 +89,7 @@ const CreatePostPage = () => {
           isClosable: true,
           position: "top",
         });
+        await navigate("/");
       } else {
         toast({
           title: "Sorry! you are not able to create Blog",
@@ -169,7 +170,9 @@ const CreatePostPage = () => {
 
   return (
     <div>
-      <Button colorScheme="teal" variant={'outline'} onClick={onOpen}>+ Create Blog</Button>
+      <Button colorScheme="teal" variant={"outline"} onClick={onOpen}>
+        + Create Blog
+      </Button>
       <Modal
         isCentered
         onClose={onClose}

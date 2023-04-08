@@ -42,32 +42,43 @@ const HomePage = () => {
   }, [deleteRender]);
 
   //Delete Blog
-  const handleOnClickDeleteBlog = async (id, role) => {
-    console.log(role);
+  const handleOnClickDeleteBlog = async (id, role, userId) => {
+    const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
     if (role === "reader") {
       toast({
         title: "Sorry ! You are not allowed to Delete Blog",
-        description: `You must Signup First`,
+        description: `You have to delete your own blog`,
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
     } else {
-      await axios.delete(`http://localhost:8080/blogs/delete/${id}`);
-      toast({
-        title: "Blog Deleted successfully",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-      setDeleteRender(true);
+      if (loginUserId._id === userId) {
+        await axios.delete(`http://localhost:8080/blogs/delete/${id}`);
+        toast({
+          title: "Blog Deleted successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        setDeleteRender(true);
+      } else {
+        toast({
+          title: "Sorry ! You can delete your own Blog",
+          description: `Create your own blog`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
     }
   };
 
   return (
-    <Box w={'100%'}>
+    <Box w={"100%"}>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3 }}
         direction={["column", "row"]}
@@ -111,7 +122,11 @@ const HomePage = () => {
                 </Link>
                 <Button
                   onClick={() =>
-                    handleOnClickDeleteBlog(item._id, item.user.userRole)
+                    handleOnClickDeleteBlog(
+                      item._id,
+                      item.user.userRole,
+                      item.user._id
+                    )
                   }
                   flex="1"
                   variant="outline"
