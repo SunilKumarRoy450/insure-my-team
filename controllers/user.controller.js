@@ -37,12 +37,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
 //get
 router.get("/get", async (req, res) => {
-  const users = await UserModel.find()
-  console.log(users)
-  return res.status(200).send(users);
+  try {
+    const users = await UserModel.find();
+    return res.status(200).send(users);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
 });
 
 module.exports = router;
