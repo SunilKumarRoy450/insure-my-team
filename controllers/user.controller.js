@@ -4,14 +4,14 @@ const UserModel = require("../models/User.model");
 
 //register
 router.post("/register", async (req, res) => {
-  const { userName, userEmail, userPassword, userImage, userRole } = req.body;
+  const { name, email, password, image, role } = req.body;
   try {
     const users = new UserModel({
-      userName,
-      userEmail,
-      userPassword,
-      userImage,
-      userRole,
+      name,
+      email,
+      password,
+      image,
+      role,
     });
     console.log(users);
     await users.save();
@@ -23,11 +23,11 @@ router.post("/register", async (req, res) => {
 
 //login
 router.post("/login", async (req, res) => {
-  const { userEmail, userPassword } = req.body;
+  const { email, password } = req.body;
   try {
-    const loginUsers = await UserModel.findOne({ userEmail });
+    const loginUsers = await UserModel.findOne({ email });
     if (loginUsers) {
-      if (loginUsers.userPassword === userPassword) {
+      if (loginUsers.password === password) {
         return res.status(200).send({ login: true, loggedInUser: loginUsers });
       }
     }

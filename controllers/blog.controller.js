@@ -73,7 +73,7 @@ router.get("/get/blog/:id", async (req, res) => {
 });
 
 //edit
-router.put("/edit/:id", async (req, res) => {
+router.patch("/edit/:id", async (req, res) => {
   const { id } = req.params;
   const { title, body, image } = req.body;
   try {

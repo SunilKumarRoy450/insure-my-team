@@ -2,21 +2,15 @@ const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema(
   {
-    userName: { type: String, required: true },
-    userEmail: { type: String, required: true, unique: true },
-    userPassword: { type: String, required: true },
-    userImage: { type: String, required: true },
-    userRole: {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    image: { type: String, required: true },
+    role: {
       type: String,
       enum: ["admin", "author", "reader"],
       default: "author",
     },
-    // blogs: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Blog",
-    //   },
-    // ],
   },
   { versionKey: false, timestamps: true }
 );
