@@ -124,7 +124,7 @@ const PostPage = () => {
     } else {
       setDisableUpdateBtn(true);
       
-      if (filterUserIdForEditBlog._id === userID._id) {
+      if (filterUserIdForEditBlog._id === userID._id || userID.role === "admin") {
         await axios.patch(
           `https://brave-housecoat-fox.cyclic.app/blogs/edit/${id}`,
           payload

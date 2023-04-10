@@ -222,7 +222,7 @@ const CreatePostPage = () => {
             />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleOnClickSubmitPostForm} variant="outline">
+            <Button border={'2px solid teal'} onClick={handleOnClickSubmitPostForm} variant="outline">
               + add Blog
             </Button>
           </ModalFooter>
