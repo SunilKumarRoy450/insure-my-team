@@ -61,7 +61,7 @@ console.log(userId,"userId")
     } else {
       toast({
         title: "Sorry ! You are not allowed to Delete Blog",
-        description: `Create your own blog`,
+        description: `You are not the right user to delete this blog`,
         status: "error",
         duration: 3000,
         isClosable: true,
