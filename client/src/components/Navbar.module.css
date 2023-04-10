@@ -3,4 +3,11 @@
     border: 1px solid;
     height: 100px;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  background-color: rgb(27, 26, 26);
+
 }
