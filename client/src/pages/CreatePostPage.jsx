@@ -81,7 +81,7 @@ const CreatePostPage = () => {
         position: "top",
       });
     } else {
-      if (loginUserId.userRole === "author") {
+      if (loginUserId.role === "author") {
         await axios.post(
           "https://brave-housecoat-fox.cyclic.app/blogs/create/blog",
           payload
@@ -119,8 +119,8 @@ const CreatePostPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      userEmail: loginFormValue.email,
-      userPassword: loginFormValue.password,
+      email: loginFormValue.email,
+      password: loginFormValue.password,
     };
     if (loginFormValue.email === "" || loginFormValue.password === "") {
       toast({
@@ -134,13 +134,12 @@ const CreatePostPage = () => {
     } else {
       const userData = users.find((item) => {
         if (
-          item.userEmail === payload.userEmail &&
-          item.userPassword === payload.userPassword
+          item.email === payload.email &&
+          item.password === payload.password
         ) {
           return item;
         }
       });
-      console.log(userData);
       if (userData) {
         await axios
           .post("https://brave-housecoat-fox.cyclic.app/users/login", payload)

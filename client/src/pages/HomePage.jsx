@@ -45,7 +45,7 @@ const HomePage = () => {
   const handleOnClickDeleteBlog = async (id, userId) => {
     const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
 
-    if (loginUserId._id === userId || loginUserId.userRole === "admin") {
+    if (loginUserId._id === userId || loginUserId.role === "admin") {
       await axios.delete(
         `https://brave-housecoat-fox.cyclic.app/blogs/delete/${id}`
       );

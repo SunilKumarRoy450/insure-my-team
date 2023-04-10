@@ -40,10 +40,10 @@ const SignUpPage = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      userName: signupFormValue.username,
-      userEmail: signupFormValue.email,
-      userPassword: signupFormValue.password,
-      userImage: signupFormValue.image,
+      name: signupFormValue.username,
+      email: signupFormValue.email,
+      password: signupFormValue.password,
+      image: signupFormValue.image,
     };
     if (
       signupFormValue.username === "" ||

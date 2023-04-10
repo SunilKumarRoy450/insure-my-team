@@ -59,6 +59,9 @@ const PostPage = () => {
   //Filtering comments array from blogs
   const filterData = blogAndComment?.filter((item) => item._id === id);
 
+  //Finding user whose blog will be edited
+  const filterUserIdForEditBlog=blogAndComment?.find((item)=>item.user)
+
   // Post Comment
   const handleCommentFormOnChange = (e) => {
     const { value, name } = e.target;
@@ -73,7 +76,10 @@ const PostPage = () => {
       body: commentFormValue.body,
     };
 
-    await axios.post(`https://brave-housecoat-fox.cyclic.app/blogs/add/comment`, payload);
+    await axios.post(
+      `https://brave-housecoat-fox.cyclic.app/blogs/add/comment`,
+      payload
+    );
     toast({
       title: "Comment Added",
       description: "Thanks for your feedback",
@@ -117,17 +123,31 @@ const PostPage = () => {
       });
     } else {
       setDisableUpdateBtn(true);
-
-      await axios.put(`https://brave-housecoat-fox.cyclic.app/blogs/edit/${id}`, payload);
-      setUpdateBlogFormValue({
-        title: "",
-        body: "",
-        image: "",
-      });
-      setStopRender(true);
+      
+      if (filterUserIdForEditBlog._id === userID._id) {
+        await axios.patch(
+          `https://brave-housecoat-fox.cyclic.app/blogs/edit/${id}`,
+          payload
+        );
+        setUpdateBlogFormValue({
+          title: "",
+          body: "",
+          image: "",
+        });
+        setStopRender(true);
+      } else {
+        toast({
+          title: "Sorry",
+          description: "You are not the  right user to Update the blog",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+      onClose();
+      setDisableUpdateBtn(false);
     }
-    onClose();
-    setDisableUpdateBtn(false);
   };
 
   return (
@@ -144,10 +164,10 @@ const PostPage = () => {
           <CardHeader>
             <Flex spacing="4">
               <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                <Avatar name={item.user.userName} src={item.user.userImage} />
+                <Avatar name={item.user.name} src={item.user.image} />
 
                 <Box>
-                  <Heading size="sm">{item.user.userName}</Heading>
+                  <Heading size="sm">{item.user.name}</Heading>
                   <Text>{item.place}</Text>
                 </Box>
               </Flex>
@@ -263,9 +283,6 @@ const PostPage = () => {
             </ModalBody>
 
             <ModalFooter>
-              {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
-              </Button> */}
               <Button
                 isDisabled={disableUpdateBtn}
                 onClick={handleOnClickUpdateBlog}

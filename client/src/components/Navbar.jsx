@@ -45,13 +45,13 @@ const Navbar = () => {
 
           <Tag  size="md" variant="outline" colorScheme="blue" borderRadius="lg">
             <Avatar
-              src={loginUserDetail.userImage}
+              src={loginUserDetail.image}
               size="xs"
-              name={loginUserDetail.userName}
+              name={loginUserDetail.name}
               ml={-1}
               mr={2}
             />
-            <TagLabel>{loginUserDetail.userName}</TagLabel>
+            <TagLabel>{loginUserDetail.name}</TagLabel>
           </Tag>
         </Box>
       </Flex>
