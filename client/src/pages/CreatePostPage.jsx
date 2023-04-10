@@ -60,7 +60,7 @@ const CreatePostPage = () => {
     const loginUserId = JSON.parse(localStorage.getItem("loggedInUser"));
 
     const payload = {
-      title: formValue.title,
+      title: `${formValue.title} Blog`,
       user: loginUserId._id,
       image: formValue.image,
       place: formValue.place,
