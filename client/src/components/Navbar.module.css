@@ -10,3 +10,18 @@
   z-index: 1000;
   background-color: rgb(27, 26, 26);
 }
+.home:hover::after {
+  content: "Home";
+  color: teal;
+  padding: 0.5rem;
+}
+.create:hover::after {
+  content: "Create Blog";
+  color: teal;
+  padding: 0.5rem;
+}
+.signin:hover::after {
+  content: "Login";
+  color: teal;
+  padding: 0.5rem;
+}

@@ -183,7 +183,7 @@ const CreatePostPage = () => {
 
   return (
     <div>
-      <Button colorScheme="teal" variant={"outline"} onClick={onOpen}>
+      <Button border={'5px solid white'} colorScheme="teal" variant={"outline"} onClick={onOpen}>
         + Create Blog
       </Button>
       <Modal
